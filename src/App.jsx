@@ -35,13 +35,19 @@ function App() {
   };
 
   return (
-    <div className="min-h-screen bg-blue-100 p-6">
-      <div className="max-w-3xl mx-auto bg-white rounded-xl shadow-md p-6">
+    <div className="min-h-screen p-6 flex items-center justify-center"
+    style={{
+      backgroundImage: "url('/cubiertos.jpg')",
+      backgroundRepeat: "repeat",
+      backgroundSize: "800px 800px",
+      backgroundColor: "#bfdbfe",
+    }}>
+      <div className="max-w-10xl mx-auto bg-white rounded-xl shadow-md p-12">
         <h1 className="text-3xl font-bold mb-4 text-center">Recetario</h1>
       
         <input
         type="text"
-        placeholder="Example: chicken, meat"
+        placeholder="Example: chicken, salmon"
         value={ingredientes}
         onChange={(e) => setIngredientes(e.target.value)}
         className="w-full p-3 border rounded mb-4"
@@ -63,7 +69,7 @@ function App() {
             className="w-full max-h-64 object-cover rounded mb-4"
             />
             <p className="mb-4 whitespace-pre-line">{recetaSeleccionada.strInstructions}</p>
-            <h3 className="font-semibold">Ingredientes:</h3>
+            <h3 className="font-semibold">Ingredients:</h3>
             <ul className="list-disc list-inside">
               {Array.from({ length: 20}, (_,i) => {
                 const ingrediente = recetaSeleccionada[`strIngredient${i + 1}`];
