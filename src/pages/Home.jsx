@@ -1,8 +1,8 @@
 import { useState } from "react";
 import axios from "axios";
-import Buscador from "./Buscador";
-import ListaRecetas from "./ListaRecetas";
-import DetalleReceta from "./DetalleReceta";
+import Buscador from "../components/Buscador";
+import ListaRecetas from "../components/ListaRecetas";
+import DetalleReceta from "../components/DetalleReceta";
 
 function Home() {
   const [ingredientes, setIngredientes] = useState("");
