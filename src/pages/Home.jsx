@@ -27,14 +27,20 @@ function Home() {
   };
 
   const obtenerDetallesReceta = async (idReceta) => {
+    setCargando(true);
     try {
       const respuesta = await axios.get(
         `https://www.themealdb.com/api/json/v1/1/lookup.php?i=${idReceta}`
       );
       setRecetaSeleccionada(respuesta.data.meals[0]);
     } catch (error) {
-      console.log("Error al obtener detalles de la receta", error);
+      console.log("Error al obtener detalles de la receta:", error);
     }
+    setCargando(false);
+  };
+
+  const volverAlListado = () => {
+    setRecetaSeleccionada(null);
   };
 
   return (
@@ -47,8 +53,8 @@ function Home() {
         backgroundColor: "#bfdbfe",
       }}
     >
-      <div className="max-w-10xl mx-auto bg-white rounded-xl shadow-md p-12">
-        <h1 className="text-3xl font-bold mb-4 text-center">Recetario</h1>
+      <div className="max-w-4xl mx-auto bg-white rounded-xl shadow-md p-8 w-full">
+        <h1 className="text-3xl font-bold mb-6 text-center">Recetario</h1>
 
         <Buscador
           ingredientes={ingredientes}
@@ -59,14 +65,21 @@ function Home() {
         {cargando && <p className="mt-4 text-center">Buscando recetas...</p>}
 
         {!cargando && recetaSeleccionada && (
-          <DetalleReceta receta={recetaSeleccionada} />
+          <>
+            <DetalleReceta receta={recetaSeleccionada} />
+            <div className="mt-4 flex justify-center">
+              <button
+                onClick={volverAlListado}
+                className="mt-4 bg-gray-300 hover:bg-gray-400 text-black px-4 py-2 rounded"
+              >
+                Volver atrás
+              </button>
+            </div>
+          </>
         )}
 
         {!cargando && !recetaSeleccionada && recetas.length > 0 && (
-          <ListaRecetas
-            recetas={recetas}
-            obtenerDetallesReceta={obtenerDetallesReceta}
-          />
+          <ListaRecetas recetas={recetas} obtenerDetallesReceta={obtenerDetallesReceta} />
         )}
 
         {!cargando && recetas.length === 0 && !recetaSeleccionada && (
