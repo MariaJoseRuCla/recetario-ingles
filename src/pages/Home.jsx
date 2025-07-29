@@ -1,15 +1,36 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import axios from "axios";
 import Buscador from "../components/Buscador";
 import ListaRecetas from "../components/ListaRecetas";
 import DetalleReceta from "../components/DetalleReceta";
 
 function Home() {
+  const [vista, setVista] = useState("busqueda");
   const [ingredientes, setIngredientes] = useState("");
   const [recetas, setRecetas] = useState([]);
   const [recetaSeleccionada, setRecetaSeleccionada] = useState(null);
   const [cargando, setCargando] = useState(false);
+  const [favoritos, setFavoritos] = useState(() => {
+    const guardados = localStorage.getItem("favoritos");
+    return guardados ? JSON.parse(guardados) : [];
+  });
 
+  // Guardar favoritos en localStorage cuando cambien
+  useEffect(() => {
+    localStorage.setItem("favoritos", JSON.stringify(favoritos));
+  }, [favoritos]);
+
+  // Alternar receta favorita
+  const toggleFavorito = (receta) => {
+    const yaFavorita = favoritos.find((f) => f.idMeal === receta.idMeal);
+    if (yaFavorita) {
+      setFavoritos(favoritos.filter((f) => f.idMeal !== receta.idMeal));
+    } else {
+      setFavoritos([...favoritos, receta]);
+    }
+  };
+
+  // Buscar recetas por ingredientes
   const buscarRecetas = async () => {
     if (!ingredientes) return;
     setRecetaSeleccionada(null);
@@ -26,6 +47,7 @@ function Home() {
     setCargando(false);
   };
 
+  // Obtener detalles de una receta
   const obtenerDetallesReceta = async (idReceta) => {
     setCargando(true);
     try {
@@ -39,6 +61,7 @@ function Home() {
     setCargando(false);
   };
 
+  // Volver al listado
   const volverAlListado = () => {
     setRecetaSeleccionada(null);
   };
@@ -66,7 +89,11 @@ function Home() {
 
         {!cargando && recetaSeleccionada && (
           <>
-            <DetalleReceta receta={recetaSeleccionada} />
+            <DetalleReceta
+              receta={recetaSeleccionada}
+              toggleFavorito={toggleFavorito}
+              esFavorita={favoritos.some(f => f.idMeal === recetaSeleccionada.idMeal)}
+            />
             <div className="mt-4 flex justify-center">
               <button
                 onClick={volverAlListado}
@@ -79,7 +106,12 @@ function Home() {
         )}
 
         {!cargando && !recetaSeleccionada && recetas.length > 0 && (
-          <ListaRecetas recetas={recetas} obtenerDetallesReceta={obtenerDetallesReceta} />
+          <ListaRecetas
+            recetas={recetas}
+            obtenerDetallesReceta={obtenerDetallesReceta}
+            favoritos={favoritos}
+            toggleFavorito={toggleFavorito}
+          />
         )}
 
         {!cargando && recetas.length === 0 && !recetaSeleccionada && (
