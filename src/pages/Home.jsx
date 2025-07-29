@@ -3,9 +3,9 @@ import axios from "axios";
 import Buscador from "../components/Buscador";
 import ListaRecetas from "../components/ListaRecetas";
 import DetalleReceta from "../components/DetalleReceta";
+import Favoritos from "../components/Favoritos";
 
 function Home() {
-  const [vista, setVista] = useState("busqueda");
   const [ingredientes, setIngredientes] = useState("");
   const [recetas, setRecetas] = useState([]);
   const [recetaSeleccionada, setRecetaSeleccionada] = useState(null);
@@ -15,12 +15,10 @@ function Home() {
     return guardados ? JSON.parse(guardados) : [];
   });
 
-  // Guardar favoritos en localStorage cuando cambien
   useEffect(() => {
     localStorage.setItem("favoritos", JSON.stringify(favoritos));
   }, [favoritos]);
 
-  // Alternar receta favorita
   const toggleFavorito = (receta) => {
     const yaFavorita = favoritos.find((f) => f.idMeal === receta.idMeal);
     if (yaFavorita) {
@@ -30,7 +28,6 @@ function Home() {
     }
   };
 
-  // Buscar recetas por ingredientes
   const buscarRecetas = async () => {
     if (!ingredientes) return;
     setRecetaSeleccionada(null);
@@ -47,7 +44,6 @@ function Home() {
     setCargando(false);
   };
 
-  // Obtener detalles de una receta
   const obtenerDetallesReceta = async (idReceta) => {
     setCargando(true);
     try {
@@ -61,7 +57,6 @@ function Home() {
     setCargando(false);
   };
 
-  // Volver al listado
   const volverAlListado = () => {
     setRecetaSeleccionada(null);
   };
@@ -106,12 +101,22 @@ function Home() {
         )}
 
         {!cargando && !recetaSeleccionada && recetas.length > 0 && (
-          <ListaRecetas
-            recetas={recetas}
-            obtenerDetallesReceta={obtenerDetallesReceta}
-            favoritos={favoritos}
-            toggleFavorito={toggleFavorito}
-          />
+          <>
+            <ListaRecetas
+              recetas={recetas}
+              obtenerDetallesReceta={obtenerDetallesReceta}
+              favoritos={favoritos}
+              toggleFavorito={toggleFavorito}
+            />
+
+  
+            <h2 className="text-xl font-bold mt-8 mb-4 text-center text-red-600">Tus recetas favoritas</h2>
+            <Favoritos
+              favoritos={favoritos}
+              obtenerDetallesReceta={obtenerDetallesReceta}
+              toggleFavorito={toggleFavorito}
+            />
+          </>
         )}
 
         {!cargando && recetas.length === 0 && !recetaSeleccionada && (
