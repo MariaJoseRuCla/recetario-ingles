@@ -1,4 +1,3 @@
-// src/components/ListaRecetas.jsx
 function ListaRecetas({ recetas, obtenerDetallesReceta, favoritos, toggleFavorito }) {
   return (
     <div className="mt-6 grid grid-cols-1 sm:grid-cols-2 gap-4">

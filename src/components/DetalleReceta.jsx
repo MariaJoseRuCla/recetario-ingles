@@ -1,10 +1,18 @@
-function DetalleReceta({ receta }) {
-  // Verifica si no hay receta seleccionada aún
+function DetalleReceta({ receta, toggleFavorito, esFavorita }) {
   if (!receta) return null;
 
   return (
     <div className="mt-6 border rounded p-4 bg-gray-50">
+      <div className="flex justify-between items-start mb-4">
       <h2 className="text-2xl font-bold mb-2">{receta.strMeal}</h2>
+      <button
+      onClick={() => toggleFavorito(receta)}
+      className="text-2xl"
+      type="button"
+      >
+        {esFavorita ? "❤️" : "🤍" }
+      </button>
+      </div>
 
       <img
         src={receta.strMealThumb}
